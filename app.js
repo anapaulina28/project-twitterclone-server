@@ -15,6 +15,9 @@ const app = express();
 require("./config")(app);
 
 // 👇 Start handling routes here
+const tweetRoutes = require("./routes/tweet.routes");
+app.use("/api", tweetRoutes);
+
 const indexRoutes = require("./routes/index.routes");
 app.use("/api", indexRoutes);
 
