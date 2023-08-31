@@ -41,7 +41,7 @@ router.get('/tweets/:tweetId',  isAuthenticated, async (req, res) =>{
     const {tweetId} = req.params;
 
     try {
-        let foundTweet = await Tweet.findById(tweetId).populate('comments')
+        let foundTweet = await Tweet.findById(tweetId).populate('comments likes')
 
         console.log('Found Tweet:', foundTweet)
         res.json(foundTweet)
