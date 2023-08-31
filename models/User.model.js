@@ -18,6 +18,14 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Name is required."],
     },
+    profileImage: {
+      type: String,
+      required: false,
+    },
+    tweets: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
+    likes: [{ type: Schema.Types.ObjectId, ref: 'Like' }],
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+    //followers: [{ type: Schema.Types.ObjectId, ref: 'Follower' }],
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
