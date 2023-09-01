@@ -23,7 +23,7 @@ const userSchema = new Schema(
       required: false,
     },
     tweets: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
-    likes: [{ type: Schema.Types.ObjectId, ref: 'Like' }],
+    likes: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
     comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
     //followers: [{ type: Schema.Types.ObjectId, ref: 'Follower' }],
   },
