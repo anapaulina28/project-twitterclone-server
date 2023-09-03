@@ -22,19 +22,33 @@ router.post('/tweets', isAuthenticated, async (req, res) => {
     }
 })
 
-router.get('/tweets', isAuthenticated, async (req, res) =>{
+// router.get('/tweets', isAuthenticated, async (req, res) =>{
+    
+//     try {
+
+//         let allTweets = await Tweet.find().populate('author comments likes')
+//         // .populate('author', 'name')
+//         // .populate('comments')
+//         // .populate('likes')
+//         res.json(allTweets)
+//     } catch (error) {
+//         res.json(error)
+//     }
+// })
+
+router.get('/tweets', isAuthenticated, async (req, res) => {
     try {
+        const allTweets = await Tweet.find()
+            .populate('author', 'name')
+            .populate('comments')
+            .populate('likes')
+            .exec();
 
-        let allTweets = await Tweet.find()
-        // .populate('author', 'name')
-        // .populate('comments')
-        // .populate('likes')
-        res.json(allTweets)
+        res.json(allTweets);
     } catch (error) {
-        res.json(error)
+        res.status(500).json({ error: 'Server error' });
     }
-})
-
+});
 
 
 router.get('/tweets/:tweetId',  isAuthenticated, async (req, res) =>{
@@ -146,6 +160,7 @@ router.get("/likes", isAuthenticated, async (req, res) => {
         res.json(error)
     }
 })
+
 
 
 
