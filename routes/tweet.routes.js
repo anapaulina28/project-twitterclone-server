@@ -39,10 +39,13 @@ router.post('/tweets', isAuthenticated, async (req, res) => {
 router.get('/tweets', isAuthenticated, async (req, res) => {
     try {
         const allTweets = await Tweet.find()
-            .populate('author', 'name')
+            .populate('author')
             .populate('comments')
-            .populate('likes')
+            .populate('likes') 
+            .sort({ createdAt: -1 })    
             .exec();
+
+            
 
         res.json(allTweets);
     } catch (error) {
@@ -51,19 +54,28 @@ router.get('/tweets', isAuthenticated, async (req, res) => {
 });
 
 
-router.get('/tweets/:tweetId',  isAuthenticated, async (req, res) =>{
-    const {tweetId} = req.params;
-
+router.get('/tweets/:tweetId', isAuthenticated, async (req, res) => {
+    const { tweetId } = req.params;
+  
     try {
-        let foundTweet = await Tweet.findById(tweetId).populate('comments likes author')
-
-        console.log('Found Tweet:', foundTweet)
-        res.json(foundTweet)
+      let foundTweet = await Tweet.findById(tweetId)
+        .populate('author')
+        .populate({
+          path: 'comments',
+          populate: {
+            path: 'author',
+            select: 'name', // Only select the 'name' field from the 'author' object
+          },
+        })
+        .populate('likes');
+  
+      console.log('Found Tweet:', foundTweet);
+      res.json(foundTweet);
     } catch (error) {
-        res.json(error)
+      res.json(error);
     }
-})
-
+  });
+  
 
 
 router.put('/tweets/:tweetId/edit', isAuthenticated, async (req, res) =>{
@@ -94,6 +106,8 @@ router.post('/tweets/:tweetId/likes', isAuthenticated, async (req, res) => {
     const {tweetId} = req.params
     const user = req.payload._id
     try {
+
+     
         await User.findByIdAndUpdate(user, {$push: {likes: tweetId}})
         await Tweet.findByIdAndUpdate(tweetId, {$push: {likes: user}})
 
@@ -102,6 +116,23 @@ router.post('/tweets/:tweetId/likes', isAuthenticated, async (req, res) => {
         res.json(error)
     }
 })
+
+router.post('/tweets/:tweetId/unlike', isAuthenticated, async (req, res) => {
+    const {tweetId} = req.params
+    const user = req.payload._id
+    try {
+
+     
+        await User.findByIdAndUpdate(user, {$pull: {likes: tweetId}})
+        await Tweet.findByIdAndUpdate(tweetId, {$pull: {likes: user}})
+
+        res.json({Message: 'Tweet is unLiked'})
+    } catch (error) {
+        res.json(error)
+    }
+})
+
+
 
 
 
@@ -136,7 +167,7 @@ router.delete('/comment/delete/:commentId/:tweetId', isAuthenticated, async (req
 })
 
 
-router.get('/search/user', isAuthenticated, async (req, res) => {
+router.get('/search', isAuthenticated, async (req, res) => {
     const searchQuery = req.query.name
     try {
         const foundUsers = await User.find({ name: { $regex: new RegExp(searchQuery, 'i') } });

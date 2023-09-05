@@ -20,10 +20,11 @@ const userSchema = new Schema(
     },
     profileImage: {
       type: String,
-      required: false,
+      default: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmcM1rhxmlTdYut_kPrI7eWXC4SdZ0CDpxTg&usqp=CAU',
+      
     },
     tweets: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
-    likes: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
+    likes: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }], 
     comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
     //followers: [{ type: Schema.Types.ObjectId, ref: 'Follower' }],
   },
