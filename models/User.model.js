@@ -20,7 +20,7 @@ const userSchema = new Schema(
     },
     profileImage: {
       type: String,
-      default: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmcM1rhxmlTdYut_kPrI7eWXC4SdZ0CDpxTg&usqp=CAU',
+      default: 'https://secure.gravatar.com/avatar/2d14cad3de67f425899320c1335d7e43?s=512&d=mm&r=g',
       
     },
     tweets: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],

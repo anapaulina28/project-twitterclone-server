@@ -192,6 +192,21 @@ router.get("/likes", isAuthenticated, async (req, res) => {
     }
 })
 
+router.get("/user/:userId/tweets", isAuthenticated, async (req, res) => {
+    const {userId} = req.params
+    try {
+        const getUserTweet = await User.findById(userId)
+        .populate('tweets')
+            .populate('comments')
+            .populate('likes') 
+            .sort({ createdAt: -1 })    
+            .exec();
+        res.json(getUserTweet)
+
+    } catch (error) {
+        res.json(error)
+    }
+})
 
 
 
